@@ -1,5 +1,6 @@
 package com.nextdigital.apibank.domain.card;
 
+import com.nextdigital.apibank.domain.account.Account;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -18,7 +19,7 @@ import java.util.UUID;
 public final class Card implements Serializable {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private final UUID id;
 
     @Column(name = "card_number", nullable = false)
@@ -35,6 +36,9 @@ public final class Card implements Serializable {
 
     @Column(name = "credit", nullable = false)
     private final double credit;
+
+    @OneToOne
+    private final Account account;
 
     private static final long serialVersionUID = 3975634709368236646L;
 

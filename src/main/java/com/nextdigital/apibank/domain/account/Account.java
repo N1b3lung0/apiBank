@@ -1,15 +1,17 @@
 package com.nextdigital.apibank.domain.account;
 
+import com.nextdigital.apibank.domain.bank.Bank;
+import com.nextdigital.apibank.domain.card.Card;
+import com.nextdigital.apibank.domain.customer.Customer;
+import com.nextdigital.apibank.domain.operation.Operation;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -21,10 +23,31 @@ import java.util.UUID;
 public final class Account implements Serializable {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private final UUID id;
 
+    @Column(name = "balance", nullable = false)
+    private final double balance;
 
+    @Column(name = "iban", nullable = false)
+    private final String iban;
+
+    @Column(name = "account_number", nullable = false)
+    private final Integer accountNumber;
+
+    @OneToOne
+    private final Card card;
+
+    @ManyToOne
+    @JoinColumn(name = "bank_id")
+    private final Bank bank;
+
+    @ManyToOne
+    @JoinColumn(name = "customer_id")
+    private final Customer customer;
+
+    @OneToMany(mappedBy = "account")
+    private final List<Operation> operations;
 
     private static final long serialVersionUID = -8990944830025803370L;
 }

@@ -1,14 +1,12 @@
 package com.nextdigital.apibank.domain.operation;
 
+import com.nextdigital.apibank.domain.account.Account;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.UUID;
 
@@ -21,9 +19,15 @@ import java.util.UUID;
 public class Operation implements Serializable {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private final UUID id;
 
+    @Column
+    private final OperationType operationType;
+
+    @ManyToOne
+    @JoinColumn(name = "account_id")
+    private final Account account;
 
     private static final long serialVersionUID = -9144982998131748421L;
 }

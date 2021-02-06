@@ -1,14 +1,12 @@
 package com.nextdigital.apibank.domain.atm;
 
+import com.nextdigital.apibank.domain.bank.Bank;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.UUID;
 
@@ -21,8 +19,12 @@ import java.util.UUID;
 public class Atm implements Serializable {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private final UUID id;
+
+    @ManyToOne
+    @JoinColumn(name = "bank_id")
+    private final Bank bank;
 
     private static final long serialVersionUID = -5060635705662946394L;
 }
