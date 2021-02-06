@@ -2,6 +2,7 @@ package com.nextdigital.apibank.services.card;
 
 import com.nextdigital.apibank.api.v1.card.mapper.CardMapper;
 import com.nextdigital.apibank.api.v1.card.model.CardDTO;
+import com.nextdigital.apibank.domain.card.Card;
 import com.nextdigital.apibank.repositories.card.CardRepository;
 import com.nextdigital.apibank.services.common.uuid.UUIDUtils;
 import lombok.RequiredArgsConstructor;
@@ -29,23 +30,41 @@ public class CardServiceImpl implements CardService {
     @Override
     @Transactional(readOnly = true)
     public CardDTO getCardById(String id) throws Exception {
-        return cardMapper.toCardDTO(cardRepository.findById(UUIDUtils.fromString(id))
-                .orElseThrow(() -> new Exception("Card not found - " + id)));
+        return findCard(id);
     }
 
     @Override
     @Transactional
     public CardDTO activateCard(String id, String pin) throws Exception {
-        CardDTO savedCardDTO = cardMapper.toCardDTO(cardRepository.findById(UUIDUtils.fromString(id))
-                .orElseThrow(() -> new Exception("Card not found - " + id)));
+        CardDTO savedCardDTO = findCard(id);
         savedCardDTO.setActivated(true);
         savedCardDTO.setPin(pin);
-        return savedCardDTO;
+        Card newCard = cardMapper.toCard(savedCardDTO);
+        return saveAndReturnDTO(newCard);
     }
 
     @Override
     @Transactional
-    public CardDTO updatePIN(CardDTO cardDTO) {
-        return null;
+    public CardDTO updatePIN(String id, String pin) throws Exception {
+        CardDTO savedCardDTO = findCard(id);
+        if (isActivated(savedCardDTO)) {
+            savedCardDTO.setPin(pin);
+        }
+        return savedCardDTO;
+    }
+
+    private CardDTO findCard(String id) throws Exception {
+        return cardMapper.toCardDTO(cardRepository.findById(UUIDUtils.fromString(id))
+                .orElseThrow(() -> new Exception("Card not found - " + id)));
+    }
+
+    private Boolean isActivated(CardDTO cardDTO) {
+        return cardDTO.getActivated();
+    }
+
+    private CardDTO saveAndReturnDTO(Card card) {
+        Card savedCard = cardRepository.save(card);
+        log.debug("Service Card, creating/updating a Card " + savedCard);
+        return cardMapper.toCardDTO(savedCard);
     }
 }

@@ -17,6 +17,7 @@ public class CardMapper {
     public Card toCard(CardDTO cardDTO) {
         return cardDTO == null ?
                 null :
-                new Card();
+                new Card(cardDTO.getId(), cardDTO.getPin(), cardDTO.getActivated(),
+                        cardDTO.getCardType(), cardDTO.getCredit(), cardDTO.getAccount());
     }
 }

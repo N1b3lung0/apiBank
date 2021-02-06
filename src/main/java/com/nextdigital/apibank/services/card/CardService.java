@@ -9,5 +9,5 @@ public interface CardService {
     List<CardDTO> getAllCards();
     CardDTO getCardById(String id) throws Exception;
     CardDTO activateCard(String id, String pin) throws Exception;
-    CardDTO updatePIN(CardDTO cardDTO);
+    CardDTO updatePIN(String id, String pin) throws Exception;
 }

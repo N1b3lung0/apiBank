@@ -16,7 +16,7 @@ public class CardController {
     private final CardService cardService;
 
     @GetMapping(value = {"", "/"})
-    public ResponseEntity<List<CardDTO>> getAllCars() {
+    public ResponseEntity<List<CardDTO>> getAllCards() {
         return ResponseEntity.ok(cardService.getAllCards());
     }
 
@@ -28,5 +28,10 @@ public class CardController {
     @PostMapping(value = { "/{id}"})
     public ResponseEntity<CardDTO> activateCard(@PathVariable String id, @RequestParam(name = "pin") String pin) throws Exception {
         return ResponseEntity.ok(cardService.activateCard(id, pin));
+    }
+
+    @PutMapping(value = { "/{id}"})
+    public ResponseEntity<CardDTO> updatePIN(@PathVariable String id, @RequestParam(name = "pin") String pin) throws Exception {
+        return ResponseEntity.ok(cardService.updatePIN(id, pin));
     }
 }
