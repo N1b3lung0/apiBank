@@ -1,10 +1,8 @@
 package com.nextdigital.apibank.domain.card;
 
 import com.nextdigital.apibank.domain.account.Account;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -19,14 +17,12 @@ import java.util.UUID;
 public final class Card implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Type(type = "uuid-char")
+    @GeneratedValue
     private final UUID id;
 
-    @Column(name = "card_number", nullable = false)
-    private final Integer cardNumber;
-
     @Column(name = "pin", nullable = false)
-    private final Integer pin;
+    private final String pin;
 
     @Column(name = "is_activated", nullable = false)
     private final Boolean activated;
@@ -37,6 +33,8 @@ public final class Card implements Serializable {
     @Column(name = "credit", nullable = false)
     private final double credit;
 
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @OneToOne
     private final Account account;
 

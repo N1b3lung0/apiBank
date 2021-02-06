@@ -4,10 +4,8 @@ import com.nextdigital.apibank.domain.bank.Bank;
 import com.nextdigital.apibank.domain.card.Card;
 import com.nextdigital.apibank.domain.customer.Customer;
 import com.nextdigital.apibank.domain.operation.Operation;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -23,7 +21,8 @@ import java.util.UUID;
 public final class Account implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Type(type = "uuid-char")
+    @GeneratedValue
     private final UUID id;
 
     @Column(name = "balance", nullable = false)
@@ -33,9 +32,12 @@ public final class Account implements Serializable {
     private final String iban;
 
     @Column(name = "account_number", nullable = false)
-    private final Integer accountNumber;
+    private final String accountNumber;
 
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @OneToOne
+    @JoinColumn(name = "card_id")
     private final Card card;
 
     @ManyToOne
