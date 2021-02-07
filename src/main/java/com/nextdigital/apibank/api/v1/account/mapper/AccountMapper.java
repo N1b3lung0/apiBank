@@ -16,13 +16,13 @@ public class AccountMapper {
     public AccountDTO toAccountDTO(Account account) {
         return account == null ?
                 null :
-                new AccountDTO(account.getId(), account.getBalance());
+                new AccountDTO(account.getId(), account.getBalance(), account.getBank());
     }
 
     public Account toAccount(AccountDTO accountDTO) throws Exception {
         Account account = accountRepository.findById(accountDTO.getId())
                 .orElseThrow(() -> new Exception("Account not found - " + accountDTO.getId()));
         return new Account(accountDTO.getId(), accountDTO.getBalance(), account.getIban(), account.getAccountNumber(),
-                account.getCard(), account.getBank(), account.getCustomer(), account.getOperations());
+                account.getCard(), accountDTO.getBank(), account.getCustomer(), account.getOperations());
     }
 }

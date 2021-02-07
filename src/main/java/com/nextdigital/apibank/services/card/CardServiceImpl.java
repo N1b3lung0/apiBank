@@ -88,7 +88,7 @@ public class CardServiceImpl implements CardService {
     public Boolean depositMoney(String id, double money) throws Exception {
         CardDTO savedCardDTO = findCard(id);
         AccountDTO savedAccountDTO = savedCardDTO.getAccountDTO();
-
+        //if (savedAccountDTO.getBank().getId().equals())
         return null;
     }
 
