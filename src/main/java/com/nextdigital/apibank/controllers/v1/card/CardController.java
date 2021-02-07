@@ -25,13 +25,18 @@ public class CardController {
         return ResponseEntity.ok(cardService.getCardById(id));
     }
 
-    @PostMapping(value = { "/{id}"})
+    @PostMapping(value = { "/activate/{id}"})
     public ResponseEntity<CardDTO> activateCard(@PathVariable String id, @RequestParam(name = "pin") String pin) throws Exception {
         return ResponseEntity.ok(cardService.activateCard(id, pin));
     }
 
-    @PutMapping(value = { "/{id}"})
+    @PostMapping(value = { "/updatepin/{id}"})
     public ResponseEntity<CardDTO> updatePIN(@PathVariable String id, @RequestParam(name = "pin") String pin) throws Exception {
         return ResponseEntity.ok(cardService.updatePIN(id, pin));
+    }
+
+    @PostMapping(value = { "/withdrawcash/{id}"})
+    public ResponseEntity<Boolean> withdrawCash(@PathVariable String id, @RequestParam(name = "cash") double cash) throws Exception {
+        return ResponseEntity.ok(cardService.withdrawCash(id, cash));
     }
 }

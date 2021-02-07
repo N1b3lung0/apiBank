@@ -37,7 +37,6 @@ public final class Account implements Serializable {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @OneToOne
-    @JoinColumn(name = "card_id")
     private final Card card;
 
     @ManyToOne
@@ -48,7 +47,7 @@ public final class Account implements Serializable {
     @JoinColumn(name = "customer_id")
     private final Customer customer;
 
-    @OneToMany(mappedBy = "account")
+    @OneToMany(fetch = FetchType.EAGER)
     private final List<Operation> operations;
 
     private static final long serialVersionUID = -8990944830025803370L;

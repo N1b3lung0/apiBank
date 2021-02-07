@@ -1,8 +1,13 @@
 package com.nextdigital.apibank.services.card;
 
+import com.nextdigital.apibank.api.v1.account.mapper.AccountMapper;
+import com.nextdigital.apibank.api.v1.account.model.AccountDTO;
 import com.nextdigital.apibank.api.v1.card.mapper.CardMapper;
 import com.nextdigital.apibank.api.v1.card.model.CardDTO;
+import com.nextdigital.apibank.domain.account.Account;
 import com.nextdigital.apibank.domain.card.Card;
+import com.nextdigital.apibank.domain.card.CardType;
+import com.nextdigital.apibank.repositories.account.AccountRepository;
 import com.nextdigital.apibank.repositories.card.CardRepository;
 import com.nextdigital.apibank.services.common.uuid.UUIDUtils;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +24,9 @@ import java.util.stream.Collectors;
 public class CardServiceImpl implements CardService {
 
     private final CardMapper cardMapper;
+    private final AccountMapper accountMapper;
     private final CardRepository cardRepository;
+    private final AccountRepository accountRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -40,7 +47,7 @@ public class CardServiceImpl implements CardService {
         savedCardDTO.setActivated(true);
         savedCardDTO.setPin(pin);
         Card newCard = cardMapper.toCard(savedCardDTO);
-        return saveAndReturnDTO(newCard);
+        return saveAndReturnCardDTO(newCard);
     }
 
     @Override
@@ -51,7 +58,38 @@ public class CardServiceImpl implements CardService {
             savedCardDTO.setPin(pin);
         }
         Card newCard = cardMapper.toCard(savedCardDTO);
-        return saveAndReturnDTO(newCard);
+        return saveAndReturnCardDTO(newCard);
+    }
+
+    @Override
+    public Boolean withdrawCash(String id, double cash) throws Exception {
+        CardDTO savedCardDTO = findCard(id);
+        AccountDTO savedAccountDTO = savedCardDTO.getAccountDTO();
+        if (savedCardDTO.getCardType().equals(CardType.CREDIT)) {
+            if (savedAccountDTO.getBalance() + savedCardDTO.getCredit() < cash) {
+                return false;
+            } else {
+                savedAccountDTO.setBalance(savedAccountDTO.getBalance() - cash);
+                saveAndReturnAccountDTO(accountMapper.toAccount(savedAccountDTO));
+                return true;
+            }
+        } else {
+            if (savedAccountDTO.getBalance() < cash) {
+                return false;
+            } else {
+                savedAccountDTO.setBalance(savedAccountDTO.getBalance() - cash);
+                saveAndReturnAccountDTO(accountMapper.toAccount(savedAccountDTO));
+                return true;
+            }
+        }
+    }
+
+    @Override
+    public Boolean depositMoney(String id, double money) throws Exception {
+        CardDTO savedCardDTO = findCard(id);
+        AccountDTO savedAccountDTO = savedCardDTO.getAccountDTO();
+
+        return null;
     }
 
     private CardDTO findCard(String id) throws Exception {
@@ -63,9 +101,15 @@ public class CardServiceImpl implements CardService {
         return cardDTO.getActivated();
     }
 
-    private CardDTO saveAndReturnDTO(Card card) {
+    private CardDTO saveAndReturnCardDTO(Card card) {
         Card savedCard = cardRepository.save(card);
         log.debug("Service Card, creating/updating a Card " + savedCard);
         return cardMapper.toCardDTO(savedCard);
+    }
+
+    private AccountDTO saveAndReturnAccountDTO(Account account) {
+        Account savedAccount = accountRepository.save(account);
+        log.debug("Service Card, creating/updating an Account " + savedAccount);
+        return accountMapper.toAccountDTO(savedAccount);
     }
 }

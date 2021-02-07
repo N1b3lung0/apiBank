@@ -36,6 +36,7 @@ public final class Card implements Serializable {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @OneToOne
+    @JoinColumn(name = "account_id")
     private final Account account;
 
     private static final long serialVersionUID = 3975634709368236646L;

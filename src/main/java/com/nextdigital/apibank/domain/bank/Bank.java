@@ -27,11 +27,8 @@ public class Bank implements Serializable {
     @GeneratedValue
     private final UUID id;
 
-    @OneToMany(mappedBy = "bank")
+    @OneToMany(fetch = FetchType.EAGER)
     private final List<Account> accounts;
-
-    @OneToMany(mappedBy = "bank")
-    private final List<Atm> atms;
 
     private static final long serialVersionUID = 3766001821340805955L;
 }

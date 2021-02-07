@@ -10,4 +10,6 @@ public interface CardService {
     CardDTO getCardById(String id) throws Exception;
     CardDTO activateCard(String id, String pin) throws Exception;
     CardDTO updatePIN(String id, String pin) throws Exception;
+    Boolean withdrawCash(String id, double cash) throws Exception;
+    Boolean depositMoney(String id, double money) throws Exception;
 }

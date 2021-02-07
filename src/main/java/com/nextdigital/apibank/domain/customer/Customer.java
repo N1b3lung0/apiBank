@@ -25,7 +25,7 @@ public class Customer implements Serializable {
     @GeneratedValue
     private final UUID id;
 
-    @OneToMany(mappedBy = "customer")
+    @OneToMany(fetch = FetchType.EAGER)
     private final List<Account> account;
 
     private static final long serialVersionUID = 8217695539311341570L;
