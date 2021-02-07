@@ -50,7 +50,8 @@ public class CardServiceImpl implements CardService {
         if (isActivated(savedCardDTO)) {
             savedCardDTO.setPin(pin);
         }
-        return savedCardDTO;
+        Card newCard = cardMapper.toCard(savedCardDTO);
+        return saveAndReturnDTO(newCard);
     }
 
     private CardDTO findCard(String id) throws Exception {
